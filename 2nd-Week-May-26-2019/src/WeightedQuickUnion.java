@@ -108,6 +108,9 @@ public class WeightedQuickUnion {
         count--;
     }
 
+    public int getSize(int n){
+        return size[n];
+    }
 
     /**
      * Reads in a sequence of pairs of integers (between 0 and n-1) from standard input, 

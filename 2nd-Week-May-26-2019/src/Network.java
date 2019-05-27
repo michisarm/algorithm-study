@@ -78,11 +78,11 @@ public class Network {
         length[p] = Math.abs((p+1)-(q+1)) % 1000;
     }
 
-    public static int getLength(int i){
+    public int getLength(int i){
         int size = 0;
         while(i != cluster[i]){
-            i = cluster[i];
             size += length[i];
+            i = cluster[i];
         }
         return size;
     }
@@ -93,10 +93,10 @@ public class Network {
         testCount = Integer.parseInt(br.readLine()); //테스트 케이스 수
         N = Integer.parseInt(br.readLine()); // 기업의 수
 
-        Network nw = new Network(N);
-
         //기업의 수 조건
-        //if(4 <= N && N <= 20000) throw new IndexOutOfBoundsException();
+        if(!(4 <= N && N <= 20000)) throw new IndexOutOfBoundsException();
+
+        Network nw = new Network(N);
 
         for(int i = 0; i < testCount; i++){
             while(true){
@@ -104,17 +104,17 @@ public class Network {
                 type = tmp[0];
                 if("E".equals(type)){
                     I = Integer.parseInt(tmp[1]);
-                    System.out.println(getLength(I-1));
+                    int result = nw.getLength(I-1);
+                    System.out.println(result);
                 } else if("I".equals(type)){
                     I = Integer.parseInt(tmp[1]);
                     J = Integer.parseInt(tmp[2]);
                     nw.union(I-1,J-1);
                 } else if("O".equals(type)){
                     break;
-                } else {
-                    break;
                 }
             }
         }
+        br.close();
     }
 }

@@ -3,10 +3,9 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
 
     private WeightedQuickUnionUF uf;
-    //    private WeightedQuickUnionUF backwash;
     private int gridSize;
-    private final int startPoint;
-    private final int endPoint;
+    private int startPoint;
+    private int endPoint;
     private boolean[][] site; // 픽셀로 생각..
     private int openSiteNumber;
 
@@ -16,7 +15,6 @@ public class Percolation {
         if (n < 1) throw new IllegalArgumentException();
 
         uf = new WeightedQuickUnionUF(n * n + 2); // +2 virtual top and bottom
-//        backwash = new WeightedQuickUnionUF(n * n + 1);
 
         site = new boolean[n][n];
         openSiteNumber = 0;
@@ -28,7 +26,8 @@ public class Percolation {
 
     // open site (row, col) if it is not open already
     public void open(int row, int col) {
-        validate(row, col);
+
+        validate(row,col);
 
         if (isOpen(row, col)) return;
 
@@ -38,7 +37,6 @@ public class Percolation {
         // 1번째 줄은 가상 시작점과 연결
         if (row == 1) {
             uf.union(getSiteIndex(row, col), startPoint);
-//            backwash.union(getSiteIndex(row, col), startPoint);
         }
 
         // 마지막줄은 가상 종료점과 연결
@@ -49,39 +47,41 @@ public class Percolation {
         //위쪽 연결 체크
         if ((1 < row && row < gridSize) && isOpen(row - 1, col)) {
             uf.union(getSiteIndex(row - 1, col), getSiteIndex(row, col));
-//            backwash.union(getSiteIndex(row - 1, col), getSiteIndex(row, col));
         }
 
         //아래쪽 연결 체크
         if ((1 < row && row < gridSize) && isOpen(row + 1, col)) {
             uf.union(getSiteIndex(row + 1, col), getSiteIndex(row, col));
-//            backwash.union(getSiteIndex(row + 1, col), getSiteIndex(row, col));
         }
 
         //왼쪽 연결 체크
         if ((1 < col && col < gridSize) && isOpen(row, col - 1)) {
             uf.union(getSiteIndex(row, col - 1), getSiteIndex(row, col));
-//            backwash.union(getSiteIndex(row, col - 1), getSiteIndex(row, col));
         }
 
         //오른쪽 연결 체크
         if ((1 < col && col < gridSize) && isOpen(row, col + 1)) {
             uf.union(getSiteIndex(row, col + 1), getSiteIndex(row, col));
-//            backwash.union(getSiteIndex(row, col + 1), getSiteIndex(row, col));
         }
     }
 
     // is site (row, col) open?
     public boolean isOpen(int row, int col) {
-        validate(row, col);
+        validate(row,col);
         return site[row - 1][col - 1];
     }
 
     // is site (row, col) full?
     public boolean isFull(int row, int col) {
-        validate(row, col);
-//        return backwash.connected(getSiteIndex(row, col), startPoint);
-        return uf.connected(getSiteIndex(row, col), startPoint);
+        validate(row,col);
+        if(!isOpen(row,col)){
+            return false;
+        }
+        int currentSite = getSiteIndex(row, col);
+        if (uf.connected(startPoint, currentSite)){
+            return true;
+        }
+        return false;
     }
 
     // number of open site
@@ -95,14 +95,14 @@ public class Percolation {
     }
 
     //validate
-    public void validate(int row, int col) {
-        if (row < 1 || row > gridSize || col < 1 || col > gridSize) throw new IndexOutOfBoundsException();
+    private void validate(int row, int col) {
+        if (row < 1 || row > gridSize || col < 1 || col > gridSize) throw new IllegalArgumentException();
     }
 
     //get index
     private int getSiteIndex(int row, int col) {
-        validate(row, col);
-        return (row - 1) * gridSize + col;
+        if (row < 1 || row > gridSize || col < 1 || col > gridSize) throw new IllegalArgumentException();
+        return (row - 1) * gridSize + col - 1;
     }
 
     // test client (optional)

@@ -20,25 +20,25 @@ public class Main {
         length[p] = Math.abs((p + 1) - (q + 1)) % 1000;
     }
 
-//    public static int getLength(int i) {
-//        int size = 0;
-//        while (i != cluster[i]) {
-//            size += length[i];
-//            i = cluster[i];
-//        }
-//        return size;
-//    }
-
     public static int getLength(int i) {
-        if(cluster[i] == i){
-            return i;
-        }else{
-            int tmp = getLength(cluster[i]);
-            length[i] += length[cluster[i]];
-            cluster[i] = tmp;
-            return tmp;
+        int size = 0;
+        while (i != cluster[i]) {
+            size += length[i];
+            i = cluster[i];
         }
+        return size;
     }
+//
+//    public static int getLength(int i) {
+//        if(cluster[i] == i){
+//            return i;
+//        }else{
+//            int tmp = getLength(cluster[i]);
+//            length[i] += length[cluster[i]];
+//            cluster[i] = tmp;
+//            return tmp;
+//        }
+//    }
 
     public static void main(String[] args) throws IOException {
 
@@ -52,10 +52,10 @@ public class Main {
                     type = tmp[0];
                     if ("E".equals(type)) {
                         I = Integer.parseInt(tmp[1]);
-//                        int result = getLength(I - 1);
-//                        System.out.println(result);
-                        getLength(I - 1);
-                        System.out.println(length[I-1]);
+                        int result = getLength(I - 1);
+                        System.out.println(result);
+//                        getLength(I - 1);
+//                        System.out.println(length[I-1]);
                     } else if ("I".equals(type)) {
                         I = Integer.parseInt(tmp[1]);
                         J = Integer.parseInt(tmp[2]);
